@@ -172,8 +172,8 @@
         "npm run type-check passes"
       ],
       "priority": 10,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /api/twilio/sms POST route for two-way SMS routing. Handles customer messages: looks up profile by Twilio number, logs inbound message to messages table, forwards to owner's personal phone with 'From: (555) 123-4567' format. Handles owner replies: detects when owner texts Twilio number, finds most recent customer, routes reply through Twilio to customer, logs outbound message. Type-check passes."
     },
     {
       "id": "US-011",
