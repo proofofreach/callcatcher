@@ -261,8 +261,8 @@
         "npm run type-check passes"
       ],
       "priority": 15,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /dashboard/settings page with MessageTemplateForm component. Features: textarea editor with live preview, default template available, variables {business_name} and {hours} replaced in preview, character counter showing X/160 remaining with color coding (yellow near limit, red over), hours sentence omitted when hours not set with explanatory note, Save and Reset buttons, server action updateMessageTemplate persists to profiles table. Added Settings link to dashboard header. Type-check and build pass."
     },
     {
       "id": "US-016",

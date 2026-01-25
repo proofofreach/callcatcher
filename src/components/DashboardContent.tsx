@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { signOut } from '@/lib/auth-client'
 import { ConversationsList, type Conversation } from './ConversationsList'
 
@@ -69,12 +70,20 @@ export function DashboardContent({ stats, hasActivity, conversations }: Dashboar
               </h1>
               <p className="text-sm text-gray-500">CallCatcher Dashboard</p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-            >
-              Logout
-            </button>
+            <div className="flex items-center gap-3">
+              <Link
+                href="/dashboard/settings"
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Settings
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
