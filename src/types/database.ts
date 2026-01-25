@@ -21,6 +21,7 @@ export interface User {
   created_at: string;
   trial_ends_at: string;
   subscription_status: SubscriptionStatus;
+  stripe_customer_id: string | null;
 }
 
 export interface Profile {
@@ -73,6 +74,7 @@ export type Database = {
           created_at: string
           trial_ends_at: string
           subscription_status: string
+          stripe_customer_id: string | null
         }
         Insert: {
           id?: string
@@ -80,6 +82,7 @@ export type Database = {
           created_at?: string
           trial_ends_at?: string
           subscription_status?: string
+          stripe_customer_id?: string | null
         }
         Update: {
           id?: string
@@ -87,6 +90,7 @@ export type Database = {
           created_at?: string
           trial_ends_at?: string
           subscription_status?: string
+          stripe_customer_id?: string | null
         }
         Relationships: []
       }

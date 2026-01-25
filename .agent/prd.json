@@ -295,8 +295,8 @@
         "npm run type-check passes"
       ],
       "priority": 17,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created src/lib/stripe.ts with Stripe client configured via STRIPE_SECRET_KEY. Created src/lib/stripe-actions.ts with createCheckoutSession() and createBillingPortalSession() server actions. Created /api/stripe/webhook POST route that handles checkout.session.completed (activate subscription), customer.subscription.deleted (cancel), customer.subscription.updated (status sync), and invoice.payment_failed (past_due). Added stripe_customer_id to users table via migration. Updated .env.example with STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID. Type-check passes."
     },
     {
       "id": "US-018",
