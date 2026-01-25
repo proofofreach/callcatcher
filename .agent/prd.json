@@ -278,8 +278,8 @@
         "npm run type-check passes"
       ],
       "priority": 16,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created RingDurationForm component at src/components/RingDurationForm.tsx. Added updateRingDuration server action to actions.ts. Updated settings page to include Ring Duration section with dropdown (10, 15, 20, 25, 30 seconds), help text, and save button. Voice webhook already reads ring_duration from profile. Type-check and build pass."
     },
     {
       "id": "US-017",

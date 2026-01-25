@@ -3,13 +3,14 @@ import Link from 'next/link'
 import { getServerUser } from '@/lib/auth-server'
 import { createClient } from '@/lib/supabase/server'
 import { MessageTemplateForm } from '@/components/MessageTemplateForm'
+import { RingDurationForm } from '@/components/RingDurationForm'
 
 async function getProfile(userId: string) {
   const supabase = await createClient()
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('business_name, business_hours, message_template')
+    .select('business_name, business_hours, message_template, ring_duration')
     .eq('user_id', userId)
     .single()
 
@@ -66,7 +67,18 @@ export default async function SettingsPage() {
       </div>
 
       {/* Main Content */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        {/* Ring Duration Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Ring Duration</h2>
+          <p className="text-gray-600 mb-6">
+            Control how long incoming calls ring before triggering an auto-text.
+          </p>
+          <RingDurationForm
+            initialDuration={profile.ring_duration}
+          />
+        </div>
+
         {/* Message Template Section */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Auto-Reply Message</h2>
