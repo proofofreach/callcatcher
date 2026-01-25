@@ -3,13 +3,18 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { twilioClient } from "@/lib/twilio";
 import { formatPhoneNumber } from "@/lib/format";
 
+// Opt-out keywords (case-insensitive)
+const STOP_KEYWORDS = ["stop", "stopall", "unsubscribe", "cancel", "end", "quit"];
+const START_KEYWORDS = ["start", "yes", "unstop"];
+
 /**
  * POST /api/twilio/sms
  * Twilio SMS webhook - handles inbound SMS messages
  *
- * Two-way routing:
- * 1. Customer -> Twilio number: Forward to owner's personal phone with sender info
- * 2. Owner (personal phone) -> Twilio number: Route reply back to customer
+ * Features:
+ * 1. STOP/START opt-out handling
+ * 2. Customer -> Twilio number: Forward to owner's personal phone with sender info
+ * 3. Owner (personal phone) -> Twilio number: Route reply back to customer
  */
 export async function POST(request: NextRequest) {
   try {
@@ -54,6 +59,23 @@ export async function POST(request: NextRequest) {
 
     const isFromOwner = normalizedFrom === normalizedOwnerPhone;
 
+    // Check for opt-out/opt-in keywords from customers only
+    if (!isFromOwner) {
+      const trimmedBody = body.trim().toLowerCase();
+
+      // Check for STOP keyword
+      if (STOP_KEYWORDS.includes(trimmedBody)) {
+        await handleOptOut(supabase, profile, from);
+        return NextResponse.json({ success: true, action: "opted_out" });
+      }
+
+      // Check for START keyword
+      if (START_KEYWORDS.includes(trimmedBody)) {
+        await handleOptIn(supabase, profile, from);
+        return NextResponse.json({ success: true, action: "opted_in" });
+      }
+    }
+
     if (isFromOwner) {
       // Owner is replying via Twilio number - route to customer
       // The owner's message format should be: "PHONE: message" or we use last customer
@@ -70,6 +92,86 @@ export async function POST(request: NextRequest) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  }
+}
+
+/**
+ * Handle STOP keyword - add phone to opt_outs table and confirm
+ */
+async function handleOptOut(
+  supabase: ReturnType<typeof createServiceClient>,
+  profile: {
+    user_id: string;
+    twilio_number: string | null;
+  },
+  customerPhone: string
+) {
+  // Add to opt_outs table (upsert to avoid duplicate key errors)
+  const { error: insertError } = await supabase
+    .from("opt_outs")
+    .upsert(
+      {
+        user_id: profile.user_id,
+        phone_number: customerPhone,
+      },
+      { onConflict: "user_id,phone_number" }
+    );
+
+  if (insertError) {
+    console.error("Failed to add opt-out:", insertError);
+    // Still try to send confirmation
+  }
+
+  // Send confirmation reply
+  if (twilioClient && profile.twilio_number) {
+    try {
+      await twilioClient.messages.create({
+        body: "You've been unsubscribed. Reply START to resubscribe.",
+        from: profile.twilio_number,
+        to: customerPhone,
+      });
+      console.log(`Sent opt-out confirmation to ${customerPhone}`);
+    } catch (smsError) {
+      console.error("Failed to send opt-out confirmation:", smsError);
+    }
+  }
+}
+
+/**
+ * Handle START keyword - remove phone from opt_outs table and confirm
+ */
+async function handleOptIn(
+  supabase: ReturnType<typeof createServiceClient>,
+  profile: {
+    user_id: string;
+    twilio_number: string | null;
+  },
+  customerPhone: string
+) {
+  // Remove from opt_outs table
+  const { error: deleteError } = await supabase
+    .from("opt_outs")
+    .delete()
+    .eq("user_id", profile.user_id)
+    .eq("phone_number", customerPhone);
+
+  if (deleteError) {
+    console.error("Failed to remove opt-out:", deleteError);
+    // Still try to send confirmation
+  }
+
+  // Send confirmation reply
+  if (twilioClient && profile.twilio_number) {
+    try {
+      await twilioClient.messages.create({
+        body: "You've been resubscribed. You'll receive texts from this business.",
+        from: profile.twilio_number,
+        to: customerPhone,
+      });
+      console.log(`Sent opt-in confirmation to ${customerPhone}`);
+    } catch (smsError) {
+      console.error("Failed to send opt-in confirmation:", smsError);
+    }
   }
 }
 

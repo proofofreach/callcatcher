@@ -188,8 +188,8 @@
         "npm run type-check passes"
       ],
       "priority": 11,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added STOP/START keyword handling to /api/twilio/sms route. Supports multiple keywords: STOP/STOPALL/UNSUBSCRIBE/CANCEL/END/QUIT for opt-out, START/YES/UNSTOP for opt-in (all case-insensitive). Uses upsert for opt_outs to avoid duplicate key errors. Sends confirmation messages via Twilio. Type-check passes."
     },
     {
       "id": "US-012",
