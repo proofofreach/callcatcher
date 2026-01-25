@@ -11,142 +11,42 @@ IMPORTANT:
 
 ---
 
-## Completed: US-007 - Create phone provisioning UI
+## All Stories Complete ✅
 
-### Status: COMPLETE ✅
+All 20 user stories have `passes: true`:
 
-### What was implemented:
-1. Created `/onboarding/phone` page with PhoneProvisioningForm component
-2. Features:
-   - ZIP code input (5 digits) to determine local area code
-   - "Get My Business Number" button triggers provisionPhoneNumber action
-   - Success state displays provisioned number prominently with green checkmark
-   - Blue info box with Google Business listing update instructions
-   - Error state with red banner and retry hint
-   - "Continue to Dashboard" button after success
-3. Created `src/lib/format.ts` with formatPhoneNumber utility (moved from twilio-actions.ts)
+| Story | Title | Status |
+|-------|-------|--------|
+| US-001 | Initialize Next.js project with Supabase and Tailwind | ✅ |
+| US-002 | Create database schema and migrations | ✅ |
+| US-003 | Implement Magic Link authentication | ✅ |
+| US-004 | Create landing page with email signup | ✅ |
+| US-005 | Create onboarding flow - business profile form | ✅ |
+| US-006 | Implement Twilio number provisioning | ✅ |
+| US-007 | Create phone provisioning UI | ✅ |
+| US-008 | Implement Twilio voice webhook for call handling | ✅ |
+| US-009 | Implement missed call detection and auto-text | ✅ |
+| US-010 | Implement two-way SMS routing | ✅ |
+| US-011 | Implement STOP/START opt-out handling | ✅ |
+| US-012 | Create dashboard layout and stats overview | ✅ |
+| US-013 | Create conversations list component | ✅ |
+| US-014 | Create conversation detail view | ✅ |
+| US-015 | Create settings page with message customization | ✅ |
+| US-016 | Add ring duration setting | ✅ |
+| US-017 | Implement Stripe subscription integration | ✅ |
+| US-018 | Add trial banner and upgrade UI | ✅ |
+| US-019 | Add personal phone number update to settings | ✅ |
+| US-020 | Add opt-out status to conversation view | ✅ |
 
-### Files Modified:
-- `src/app/onboarding/phone/page.tsx` - Phone provisioning page
-- `src/components/PhoneProvisioningForm.tsx` - NEW: Form component for phone provisioning
-- `src/lib/format.ts` - NEW: Phone number formatting utility
-- `src/lib/twilio-actions.ts` - Removed formatPhoneNumber (moved to format.ts)
-- `.agent/prd.json` - Marked US-007 as passes: true
+### Summary
 
-### Verification:
-- ✅ `npm run type-check` passes
-- ✅ `npm run build` passes
-- ✅ Committed with: `feat: US-007 - Create phone provisioning UI`
+CallCatcher MVP is complete with:
 
----
+1. **Foundation**: Next.js 14 + Supabase + Tailwind, database schema with RLS, Magic Link auth
+2. **Landing & Onboarding**: Landing page with email signup, business profile form, Twilio number provisioning
+3. **Call/SMS Handling**: Voice webhook with call forwarding, missed call auto-text, two-way SMS routing, STOP/START opt-outs
+4. **Dashboard**: Stats overview (Today/Week/Month), conversations list with masking, conversation detail view
+5. **Settings**: Message template customization with preview, ring duration control, personal phone update
+6. **Billing**: Stripe subscription integration ($29/mo), trial banner with upgrade flow
 
-## Completed: US-009 - Implement missed call detection and auto-text
-
-### Status: COMPLETE ✅
-
-### What was implemented:
-1. Created `/api/twilio/status` POST route for call status callbacks
-2. Features:
-   - Parses `DialCallStatus` from Twilio callback (completed, no-answer, busy, failed, canceled)
-   - Detects missed calls (no-answer, busy, failed, canceled status)
-   - Checks `opt_outs` table before sending auto-text - skips if opted out
-   - Logs all calls to `calls` table with status (missed/answered) and duration
-   - Sends auto-text via Twilio using user's `message_template`
-   - Replaces `{business_name}` and `{hours}` template variables
-   - If no hours configured, removes the hours sentence from template
-   - Appends opt-out footer: "Reply STOP to opt out."
-   - Logs outbound message to `messages` table with `is_auto_reply=true`
-   - Answered calls logged but no auto-text sent
-
-### Files Created:
-- `src/app/api/twilio/status/route.ts` - Call status callback handler
-
-### Files Modified:
-- `.agent/prd.json` - Marked US-009 as passes: true
-
-### Verification:
-- ✅ `npm run type-check` passes
-- ✅ Committed with: `feat: US-009 - Implement missed call detection and auto-text`
-
----
-
-## Completed: US-010 - Implement two-way SMS routing
-
-### Status: COMPLETE ✅
-
-### What was implemented:
-1. Created `/api/twilio/sms` POST route for inbound SMS handling
-2. Features:
-   - Look up user profile by Twilio number that received SMS
-   - Customer messages: forward to owner's personal phone via SMS
-   - Include sender info format: "From: (555) 123-4567\n\n{message}"
-   - Log all inbound messages to messages table with direction=inbound
-   - Owner reply detection: compare sender with owner's personal_phone
-   - Owner replies routed through Twilio to most recent customer
-   - Log all outbound replies to messages table with direction=outbound
-
-### Files Created:
-- `src/app/api/twilio/sms/route.ts` - Two-way SMS routing webhook
-
-### Files Modified:
-- `.agent/prd.json` - Marked US-010 as passes: true
-
-### Verification:
-- ✅ `npm run type-check` passes
-- ✅ Committed with: `feat: US-010 - Implement two-way SMS routing`
-
----
-
-## Completed: US-011 - Implement STOP/START opt-out handling
-
-### Status: COMPLETE ✅
-
-### What was implemented:
-1. Added STOP/START keyword handling to `/api/twilio/sms` route
-2. Features:
-   - STOP keyword detection (case-insensitive): STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT
-   - START keyword detection (case-insensitive): START, YES, UNSTOP
-   - STOP adds phone to `opt_outs` table using upsert (avoids duplicate key errors)
-   - START removes phone from `opt_outs` table
-   - STOP reply: "You've been unsubscribed. Reply START to resubscribe."
-   - START reply: "You've been resubscribed. You'll receive texts from this business."
-   - Only processes opt-out keywords from customers (not owner)
-
-### Files Modified:
-- `src/app/api/twilio/sms/route.ts` - Added opt-out handling
-- `.agent/prd.json` - Marked US-011 as passes: true
-
-### Verification:
-- ✅ `npm run type-check` passes
-- ✅ Committed with: `feat: US-011 - Implement STOP/START opt-out handling`
-
----
-
-## Completed: US-019 - Add personal phone number update to settings
-
-### Status: COMPLETE ✅
-
-### What was implemented:
-1. Created `PersonalPhoneForm` component at `src/components/PersonalPhoneForm.tsx`
-2. Added `updatePersonalPhone` server action to `src/app/dashboard/settings/actions.ts`
-3. Updated settings page to include personal phone field at top
-4. Features:
-   - Displays current personal_phone from profile
-   - Shows formatted current number: "(555) 123-4567"
-   - Input formats as XXX-XXX-XXXX during typing
-   - Validation: 10-digit US format, no area codes starting with 0 or 1
-   - Stores as E.164 format (+1XXXXXXXXXX) in database
-   - Success message notes: "Change takes effect on next incoming call"
-   - Save button disabled until valid change detected
-
-### Files Created:
-- `src/components/PersonalPhoneForm.tsx` - Form component for updating forwarding number
-
-### Files Modified:
-- `src/app/dashboard/settings/actions.ts` - Added updatePersonalPhone server action
-- `src/app/dashboard/settings/page.tsx` - Added PersonalPhoneForm section, fetches personal_phone from profile
-- `.agent/prd.json` - Marked US-019 as passes: true
-
-### Verification:
-- ✅ `npm run type-check` passes
-- ✅ Committed with: `feat: US-019 - Add personal phone number update to settings`
+**LOOP_COMPLETE**
