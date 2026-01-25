@@ -4,13 +4,14 @@ import { getServerUser } from '@/lib/auth-server'
 import { createClient } from '@/lib/supabase/server'
 import { MessageTemplateForm } from '@/components/MessageTemplateForm'
 import { RingDurationForm } from '@/components/RingDurationForm'
+import { PersonalPhoneForm } from '@/components/PersonalPhoneForm'
 
 async function getProfile(userId: string) {
   const supabase = await createClient()
 
   const { data: profile, error } = await supabase
     .from('profiles')
-    .select('business_name, business_hours, message_template, ring_duration')
+    .select('business_name, business_hours, message_template, ring_duration, personal_phone')
     .eq('user_id', userId)
     .single()
 
@@ -68,6 +69,17 @@ export default async function SettingsPage() {
 
       {/* Main Content */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+        {/* Personal Phone Section */}
+        <div className="bg-white rounded-lg shadow p-6">
+          <h2 className="text-lg font-semibold text-gray-900 mb-4">Forwarding Phone Number</h2>
+          <p className="text-gray-600 mb-6">
+            This is where your business calls get forwarded to.
+          </p>
+          <PersonalPhoneForm
+            initialPhone={profile.personal_phone}
+          />
+        </div>
+
         {/* Ring Duration Section */}
         <div className="bg-white rounded-lg shadow p-6">
           <h2 className="text-lg font-semibold text-gray-900 mb-4">Ring Duration</h2>

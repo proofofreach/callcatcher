@@ -327,8 +327,8 @@
         "npm run type-check passes"
       ],
       "priority": 19,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created PersonalPhoneForm component at src/components/PersonalPhoneForm.tsx. Added updatePersonalPhone server action to settings/actions.ts. Updated settings page to include forwarding phone section at top. Features: displays current number, formats input as XXX-XXX-XXXX, validates 10-digit US format (no 0/1 area codes), stores as E.164 format (+1XXXXXXXXXX), success message notes change takes effect on next call. Type-check passes."
     },
     {
       "id": "US-020",

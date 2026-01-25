@@ -22,6 +22,15 @@ interface UpdateRingDurationResult {
   error?: string
 }
 
+interface UpdatePersonalPhoneInput {
+  personalPhone: string
+}
+
+interface UpdatePersonalPhoneResult {
+  success?: boolean
+  error?: string
+}
+
 const VALID_RING_DURATIONS = [10, 15, 20, 25, 30]
 
 export async function updateRingDuration(
@@ -53,6 +62,52 @@ export async function updateRingDuration(
   if (updateError) {
     console.error('Failed to update ring duration:', updateError)
     return { error: 'Failed to save ring duration. Please try again.' }
+  }
+
+  revalidatePath('/dashboard/settings')
+
+  return { success: true }
+}
+
+export async function updatePersonalPhone(
+  input: UpdatePersonalPhoneInput
+): Promise<UpdatePersonalPhoneResult> {
+  const { user, error: authError } = await getServerUser()
+
+  if (authError || !user) {
+    return { error: 'You must be logged in to update settings' }
+  }
+
+  const { personalPhone } = input
+
+  // Validate phone is exactly 10 digits
+  const digits = personalPhone.replace(/\D/g, '')
+  if (digits.length !== 10) {
+    return { error: 'Please enter a valid 10-digit US phone number' }
+  }
+
+  // Validate it's a valid US phone number (basic check)
+  const areaCode = digits.slice(0, 3)
+  if (areaCode.startsWith('0') || areaCode.startsWith('1')) {
+    return { error: 'Invalid area code. Please enter a valid US phone number.' }
+  }
+
+  const supabase = await createClient()
+
+  // Format as E.164 for storage
+  const formattedPhone = `+1${digits}`
+
+  const { error: updateError } = await supabase
+    .from('profiles')
+    .update({
+      personal_phone: formattedPhone,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('user_id', user.id)
+
+  if (updateError) {
+    console.error('Failed to update personal phone:', updateError)
+    return { error: 'Failed to save phone number. Please try again.' }
   }
 
   revalidatePath('/dashboard/settings')
