@@ -67,3 +67,30 @@ IMPORTANT:
 ### Verification:
 - ✅ `npm run type-check` passes
 - ✅ Committed with: `feat: US-009 - Implement missed call detection and auto-text`
+
+---
+
+## Completed: US-010 - Implement two-way SMS routing
+
+### Status: COMPLETE ✅
+
+### What was implemented:
+1. Created `/api/twilio/sms` POST route for inbound SMS handling
+2. Features:
+   - Look up user profile by Twilio number that received SMS
+   - Customer messages: forward to owner's personal phone via SMS
+   - Include sender info format: "From: (555) 123-4567\n\n{message}"
+   - Log all inbound messages to messages table with direction=inbound
+   - Owner reply detection: compare sender with owner's personal_phone
+   - Owner replies routed through Twilio to most recent customer
+   - Log all outbound replies to messages table with direction=outbound
+
+### Files Created:
+- `src/app/api/twilio/sms/route.ts` - Two-way SMS routing webhook
+
+### Files Modified:
+- `.agent/prd.json` - Marked US-010 as passes: true
+
+### Verification:
+- ✅ `npm run type-check` passes
+- ✅ Committed with: `feat: US-010 - Implement two-way SMS routing`
