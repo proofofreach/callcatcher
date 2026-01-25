@@ -101,8 +101,8 @@
         "npm run type-check passes"
       ],
       "priority": 6,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Installed twilio package. Created src/lib/twilio.ts with Twilio client configured via environment variables (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN). Created src/lib/twilio-actions.ts with provisionPhoneNumber server action that: searches for available numbers in area code, purchases the number via Twilio API, configures voice/SMS webhook URLs, stores twilio_number in profile. Updated .env.example with Twilio variables. Type-check passes."
     },
     {
       "id": "US-007",
