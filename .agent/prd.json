@@ -135,8 +135,8 @@
         "npm run type-check passes"
       ],
       "priority": 8,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /api/twilio/voice POST route. Parses Twilio webhook data, looks up profile by twilio_number, returns TwiML with <Dial> verb to forward to personal_phone. Uses ring_duration (default 20s) for timeout. Sets action URL to /api/twilio/status for status callback. Created src/lib/supabase/service.ts for service-role client in API routes. Added SUPABASE_SERVICE_ROLE_KEY to .env.example. Type-check passes."
     },
     {
       "id": "US-009",
