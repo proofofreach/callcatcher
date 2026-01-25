@@ -3,6 +3,14 @@
  * Generated from supabase/migrations/20250125000000_initial_schema.sql
  */
 
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
 export type SubscriptionStatus = 'trial' | 'active' | 'canceled' | 'past_due';
 export type MessageDirection = 'inbound' | 'outbound';
 export type CallStatus = 'missed' | 'answered';
@@ -55,56 +63,194 @@ export interface OptOut {
 }
 
 // Database schema types for Supabase client
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       users: {
-        Row: User;
-        Insert: Omit<User, 'id' | 'created_at' | 'trial_ends_at'> & {
-          id?: string;
-          created_at?: string;
-          trial_ends_at?: string;
-          subscription_status?: SubscriptionStatus;
-        };
-        Update: Partial<Omit<User, 'id'>>;
-      };
+        Row: {
+          id: string
+          email: string
+          created_at: string
+          trial_ends_at: string
+          subscription_status: string
+        }
+        Insert: {
+          id?: string
+          email: string
+          created_at?: string
+          trial_ends_at?: string
+          subscription_status?: string
+        }
+        Update: {
+          id?: string
+          email?: string
+          created_at?: string
+          trial_ends_at?: string
+          subscription_status?: string
+        }
+        Relationships: []
+      }
       profiles: {
-        Row: Profile;
-        Insert: Omit<Profile, 'id' | 'created_at' | 'updated_at'> & {
-          id?: string;
-          created_at?: string;
-          updated_at?: string;
-          ring_duration?: number;
-          message_template?: string;
-        };
-        Update: Partial<Omit<Profile, 'id' | 'user_id'>>;
-      };
+        Row: {
+          id: string
+          user_id: string
+          business_name: string | null
+          business_hours: string | null
+          personal_phone: string | null
+          twilio_number: string | null
+          ring_duration: number
+          message_template: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          business_name?: string | null
+          business_hours?: string | null
+          personal_phone?: string | null
+          twilio_number?: string | null
+          ring_duration?: number
+          message_template?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          business_name?: string | null
+          business_hours?: string | null
+          personal_phone?: string | null
+          twilio_number?: string | null
+          ring_duration?: number
+          message_template?: string
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       messages: {
-        Row: Message;
-        Insert: Omit<Message, 'id' | 'created_at'> & {
-          id?: string;
-          created_at?: string;
-          is_auto_reply?: boolean;
-        };
-        Update: Partial<Omit<Message, 'id' | 'user_id'>>;
-      };
+        Row: {
+          id: string
+          user_id: string
+          customer_phone: string
+          direction: string
+          body: string
+          is_auto_reply: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          customer_phone: string
+          direction: string
+          body: string
+          is_auto_reply?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          customer_phone?: string
+          direction?: string
+          body?: string
+          is_auto_reply?: boolean
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       calls: {
-        Row: Call;
-        Insert: Omit<Call, 'id' | 'created_at'> & {
-          id?: string;
-          created_at?: string;
-          duration?: number;
-        };
-        Update: Partial<Omit<Call, 'id' | 'user_id'>>;
-      };
+        Row: {
+          id: string
+          user_id: string
+          customer_phone: string
+          status: string
+          duration: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          customer_phone: string
+          status: string
+          duration?: number
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          customer_phone?: string
+          status?: string
+          duration?: number
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calls_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       opt_outs: {
-        Row: OptOut;
-        Insert: Omit<OptOut, 'id' | 'created_at'> & {
-          id?: string;
-          created_at?: string;
-        };
-        Update: Partial<Omit<OptOut, 'id' | 'user_id'>>;
-      };
-    };
-  };
+        Row: {
+          id: string
+          user_id: string
+          phone_number: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          phone_number: string
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          phone_number?: string
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "opt_outs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      [_ in never]: never
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
 }

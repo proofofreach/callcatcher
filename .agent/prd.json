@@ -84,8 +84,8 @@
         "npm run type-check passes"
       ],
       "priority": 5,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /onboarding page with OnboardingForm component. Form collects business name (2-100 chars, required), business hours (optional), and personal phone (10 digits, formatted XXX-XXX-XXXX). Shows inline validation errors. Server action saveBusinessProfile creates/updates profile in Supabase. Redirects to /onboarding/phone after success. Fixed Database types for proper Supabase typing. Type-check and build pass."
     },
     {
       "id": "US-006",
