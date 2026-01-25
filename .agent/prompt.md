@@ -1,52 +1,24 @@
 if prd.json is empty, run /prd-builder with brief.md then /ralph-prd-to-json
 otherwise pick highest priority story where passes: false
 
+ENV CHECK (run before each story that uses external services):
+1. Check if .env exists (not just .env.example)
+2. Verify required vars are set (not placeholder values like "your-*")
+3. If missing/invalid, output:
+   WAITING_ON_USER
+
+   Missing environment variables. Copy .env.example to .env and fill in:
+   - SUPABASE: NEXT_PUBLIC_SUPABASE_URL, NEXT_PUBLIC_SUPABASE_ANON_KEY, SUPABASE_SERVICE_ROLE_KEY
+   - TWILIO: TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN
+   - STRIPE: STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID
+
+   Then restart: ralph run -c ralph.yml
+4. If env is configured, proceed with story
+
 IMPORTANT:
-- use standard patterns for unknown development
-- run echo 'no tests configured' && echo 'no build configured' after changes
+- use Next.js patterns for Node/TypeScript development
+- run npm run type-check && npm run build after changes
 - for UI stories, verify with agent-browser before marking complete
-- set passes: true only when fully verified
+- set passes: true only when build passes AND feature works with real credentials
 - commit: feat: [Story ID] - [Title]
-- when all stories pass, output LOOP_COMPLETE
-
----
-
-## All Stories Complete ✅
-
-All 20 user stories have `passes: true`:
-
-| Story | Title | Status |
-|-------|-------|--------|
-| US-001 | Initialize Next.js project with Supabase and Tailwind | ✅ |
-| US-002 | Create database schema and migrations | ✅ |
-| US-003 | Implement Magic Link authentication | ✅ |
-| US-004 | Create landing page with email signup | ✅ |
-| US-005 | Create onboarding flow - business profile form | ✅ |
-| US-006 | Implement Twilio number provisioning | ✅ |
-| US-007 | Create phone provisioning UI | ✅ |
-| US-008 | Implement Twilio voice webhook for call handling | ✅ |
-| US-009 | Implement missed call detection and auto-text | ✅ |
-| US-010 | Implement two-way SMS routing | ✅ |
-| US-011 | Implement STOP/START opt-out handling | ✅ |
-| US-012 | Create dashboard layout and stats overview | ✅ |
-| US-013 | Create conversations list component | ✅ |
-| US-014 | Create conversation detail view | ✅ |
-| US-015 | Create settings page with message customization | ✅ |
-| US-016 | Add ring duration setting | ✅ |
-| US-017 | Implement Stripe subscription integration | ✅ |
-| US-018 | Add trial banner and upgrade UI | ✅ |
-| US-019 | Add personal phone number update to settings | ✅ |
-| US-020 | Add opt-out status to conversation view | ✅ |
-
-### Summary
-
-CallCatcher MVP is complete with:
-
-1. **Foundation**: Next.js 14 + Supabase + Tailwind, database schema with RLS, Magic Link auth
-2. **Landing & Onboarding**: Landing page with email signup, business profile form, Twilio number provisioning
-3. **Call/SMS Handling**: Voice webhook with call forwarding, missed call auto-text, two-way SMS routing, STOP/START opt-outs
-4. **Dashboard**: Stats overview (Today/Week/Month), conversations list with masking, conversation detail view
-5. **Settings**: Message template customization with preview, ring duration control, personal phone update
-6. **Billing**: Stripe subscription integration ($29/mo), trial banner with upgrade flow
-
-**LOOP_COMPLETE**
+- when all stories pass, output LOOP_COMPLETE (to stdout only, never write into files)
