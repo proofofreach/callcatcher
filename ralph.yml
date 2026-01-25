@@ -4,20 +4,23 @@
 cli:
   backend: claude
 
-prompt_file: .agent/prompt.md
-
-limits:
+event_loop:
+  prompt_file: .agent/prompt.md
   max_iterations: 40
-  max_cost: 30.0
+  max_cost_usd: 30.0
 
 hats:
   planner:
+    name: "Planner"
+    description: "Plans implementation approach and designs solutions"
     backend: claude
     triggers:
       - "PLAN_"
       - "DESIGN_"
 
   builder:
+    name: "Builder"
+    description: "Implements features and writes code"
     backend: openrouter
     triggers:
       - "BUILD_"
@@ -25,6 +28,8 @@ hats:
       - "CODE_"
 
   reviewer:
+    name: "Reviewer"
+    description: "Reviews code and verifies implementation quality"
     backend: claude
     triggers:
       - "REVIEW_"
