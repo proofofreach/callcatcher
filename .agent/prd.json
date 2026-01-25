@@ -155,8 +155,8 @@
         "npm run type-check passes"
       ],
       "priority": 9,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /api/twilio/status POST route. Parses DialCallStatus from Twilio callback, detects no-answer/busy/failed/canceled as missed. Checks opt_outs table before sending. Logs call to calls table with status=missed or answered. Sends auto-text via Twilio with template variable replacement ({business_name}, {hours}). Appends opt-out footer. Logs message to messages table with is_auto_reply=true. Type-check passes."
     },
     {
       "id": "US-010",
