@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getServerUser } from '@/lib/auth-server'
+import { PhoneProvisioningForm } from '@/components/PhoneProvisioningForm'
 
 export default async function PhoneProvisioningPage() {
   const { user, error } = await getServerUser()
@@ -17,24 +18,16 @@ export default async function PhoneProvisioningPage() {
             Get Your Business Number
           </h1>
           <p className="text-gray-600">
-            This step will be implemented in US-007
+            We&apos;ll get you a local phone number in your area that customers can call.
           </p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 text-center">
-          <p className="text-gray-600 mb-4">
-            Phone provisioning functionality coming soon...
-          </p>
-          <a
-            href="/dashboard"
-            className="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
-          >
-            Go to Dashboard
-          </a>
+        <div className="bg-white rounded-xl shadow-lg p-6 md:p-8">
+          <PhoneProvisioningForm userId={user.id} />
         </div>
 
         <div className="mt-6 text-center text-sm text-gray-500">
-          Step 2 of 2: Phone Provisioning
+          Step 2 of 2: Phone Number
         </div>
       </div>
     </main>
