@@ -34,6 +34,23 @@ async function getMessages(userId: string, customerPhone: string): Promise<Messa
   return messages as Message[]
 }
 
+async function checkOptOutStatus(userId: string, customerPhone: string): Promise<boolean> {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('opt_outs')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('phone_number', customerPhone)
+    .maybeSingle()
+
+  if (error) {
+    return false
+  }
+
+  return data !== null
+}
+
 function MessageBubble({ message }: { message: Message }) {
   const isOutbound = message.direction === 'outbound'
   const timestamp = format(new Date(message.created_at), 'MMM d, h:mm a')
@@ -80,7 +97,11 @@ export default async function ConversationDetailPage({ params }: PageProps) {
     notFound()
   }
 
-  const messages = await getMessages(user.id, customerPhone)
+  // Fetch messages and opt-out status in parallel
+  const [messages, isOptedOut] = await Promise.all([
+    getMessages(user.id, customerPhone),
+    checkOptOutStatus(user.id, customerPhone),
+  ])
 
   // If no messages found for this phone, show 404
   if (messages.length === 0) {
@@ -113,9 +134,16 @@ export default async function ConversationDetailPage({ params }: PageProps) {
               <span className="sr-only">Back to Dashboard</span>
             </Link>
             <div>
-              <h1 className="text-xl font-semibold text-gray-900">
-                {formatPhoneNumber(customerPhone)}
-              </h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-xl font-semibold text-gray-900">
+                  {formatPhoneNumber(customerPhone)}
+                </h1>
+                {isOptedOut && (
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-100 text-amber-800">
+                    Opted out - won&apos;t receive auto-texts
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-gray-500">
                 {messages.length} message{messages.length !== 1 ? 's' : ''}
               </p>

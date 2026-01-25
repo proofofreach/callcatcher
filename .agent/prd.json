@@ -341,8 +341,8 @@
         "npm run type-check passes"
       ],
       "priority": 20,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Added checkOptOutStatus function to query opt_outs table. Added amber/yellow badge in header next to phone number showing 'Opted out - won't receive auto-texts' when customer has opted out. Badge uses bg-amber-100 text-amber-800 for warning styling. Type-check passes."
     }
   ]
 }
