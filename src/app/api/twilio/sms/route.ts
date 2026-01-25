@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
     if (isFromOwner) {
       // Owner is replying via Twilio number - route to customer
       // The owner's message format should be: "PHONE: message" or we use last customer
-      await handleOwnerReply(supabase, profile, body, from);
+      await handleOwnerReply(supabase, profile, body);
     } else {
       // Customer message - forward to owner
       await handleCustomerMessage(supabase, profile, from, body);
@@ -242,8 +242,7 @@ async function handleOwnerReply(
     business_name: string | null;
     twilio_number: string | null;
   },
-  messageBody: string,
-  ownerPhone: string
+  messageBody: string
 ) {
   // Find the most recent customer that messaged us
   // The owner is replying to the last conversation

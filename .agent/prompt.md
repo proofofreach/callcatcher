@@ -94,3 +94,28 @@ IMPORTANT:
 ### Verification:
 - ✅ `npm run type-check` passes
 - ✅ Committed with: `feat: US-010 - Implement two-way SMS routing`
+
+---
+
+## Completed: US-011 - Implement STOP/START opt-out handling
+
+### Status: COMPLETE ✅
+
+### What was implemented:
+1. Added STOP/START keyword handling to `/api/twilio/sms` route
+2. Features:
+   - STOP keyword detection (case-insensitive): STOP, STOPALL, UNSUBSCRIBE, CANCEL, END, QUIT
+   - START keyword detection (case-insensitive): START, YES, UNSTOP
+   - STOP adds phone to `opt_outs` table using upsert (avoids duplicate key errors)
+   - START removes phone from `opt_outs` table
+   - STOP reply: "You've been unsubscribed. Reply START to resubscribe."
+   - START reply: "You've been resubscribed. You'll receive texts from this business."
+   - Only processes opt-out keywords from customers (not owner)
+
+### Files Modified:
+- `src/app/api/twilio/sms/route.ts` - Added opt-out handling
+- `.agent/prd.json` - Marked US-011 as passes: true
+
+### Verification:
+- ✅ `npm run type-check` passes
+- ✅ Committed with: `feat: US-011 - Implement STOP/START opt-out handling`

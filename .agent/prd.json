@@ -206,8 +206,8 @@
         "npm run build passes"
       ],
       "priority": 12,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created /dashboard page with auth protection (redirects unauthenticated users to /). Shows business name in header with logout button. Three stat cards (Today, This Week, This Month) each showing missed calls and texts sent counts. Queries calls and messages tables with date filters. Zero state displays when no activity. Created DashboardContent client component for logout functionality. Type-check and build pass."
     },
     {
       "id": "US-013",
