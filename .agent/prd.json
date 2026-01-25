@@ -85,7 +85,7 @@
       ],
       "priority": 5,
       "passes": true,
-      "notes": "Created /onboarding page with OnboardingForm component. Form collects business name (2-100 chars, required), business hours (optional), and personal phone (10 digits, formatted XXX-XXX-XXXX). Shows inline validation errors. Server action saveBusinessProfile creates/updates profile in Supabase. Redirects to /onboarding/phone after success. Fixed Database types for proper Supabase typing. Type-check and build pass."
+      "notes": "Verified: env vars configured, onboarding page implemented with business profile form, validation, and redirect to phone provisioning"
     },
     {
       "id": "US-006",
@@ -102,7 +102,7 @@
       ],
       "priority": 6,
       "passes": true,
-      "notes": "Installed twilio package. Created src/lib/twilio.ts with Twilio client configured via environment variables (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN). Created src/lib/twilio-actions.ts with provisionPhoneNumber server action that: searches for available numbers in area code, purchases the number via Twilio API, configures voice/SMS webhook URLs, stores twilio_number in profile. Updated .env.example with Twilio variables. Type-check passes."
+      "notes": "Verified: Twilio client configured, provisionPhoneNumber server action implemented with webhook configuration"
     },
     {
       "id": "US-007",
@@ -120,7 +120,7 @@
       ],
       "priority": 7,
       "passes": true,
-      "notes": "Created /onboarding/phone page with PhoneProvisioningForm component. Features: ZIP code input (5 digits), 'Get My Business Number' button triggers provisionPhoneNumber action, success state shows formatted number prominently with green checkmark, blue info box with Google Business listing instructions, error state with red banner and retry hint, 'Continue to Dashboard' button after success. Created src/lib/format.ts for formatPhoneNumber utility. Type-check and build pass."
+      "notes": "Verified: /onboarding/phone page implemented with PhoneProvisioningForm component"
     },
     {
       "id": "US-008",
@@ -136,7 +136,7 @@
       ],
       "priority": 8,
       "passes": true,
-      "notes": "Created /api/twilio/voice POST route. Parses Twilio webhook data, looks up profile by twilio_number, returns TwiML with <Dial> verb to forward to personal_phone. Uses ring_duration (default 20s) for timeout. Sets action URL to /api/twilio/status for status callback. Created src/lib/supabase/service.ts for service-role client in API routes. Added SUPABASE_SERVICE_ROLE_KEY to .env.example. Type-check passes."
+      "notes": "Verified: /api/twilio/voice route implemented with TwiML dial and status callback"
     },
     {
       "id": "US-009",
@@ -156,7 +156,7 @@
       ],
       "priority": 9,
       "passes": true,
-      "notes": "Created /api/twilio/status POST route. Parses DialCallStatus from Twilio callback, detects no-answer/busy/failed/canceled as missed. Checks opt_outs table before sending. Logs call to calls table with status=missed or answered. Sends auto-text via Twilio with template variable replacement ({business_name}, {hours}). Appends opt-out footer. Logs message to messages table with is_auto_reply=true. Type-check passes."
+      "notes": "Verified: /api/twilio/status route implemented with missed call detection and auto-text"
     },
     {
       "id": "US-010",
@@ -173,7 +173,7 @@
       ],
       "priority": 10,
       "passes": true,
-      "notes": "Created /api/twilio/sms POST route for two-way SMS routing. Handles customer messages: looks up profile by Twilio number, logs inbound message to messages table, forwards to owner's personal phone with 'From: (555) 123-4567' format. Handles owner replies: detects when owner texts Twilio number, finds most recent customer, routes reply through Twilio to customer, logs outbound message. Type-check passes."
+      "notes": "Verified: /api/twilio/sms route implemented with two-way routing"
     },
     {
       "id": "US-011",
@@ -189,7 +189,7 @@
       ],
       "priority": 11,
       "passes": true,
-      "notes": "Added STOP/START keyword handling to /api/twilio/sms route. Supports multiple keywords: STOP/STOPALL/UNSUBSCRIBE/CANCEL/END/QUIT for opt-out, START/YES/UNSTOP for opt-in (all case-insensitive). Uses upsert for opt_outs to avoid duplicate key errors. Sends confirmation messages via Twilio. Type-check passes."
+      "notes": "Verified: STOP/START handling implemented in /api/twilio/sms route"
     },
     {
       "id": "US-012",
@@ -207,7 +207,7 @@
       ],
       "priority": 12,
       "passes": true,
-      "notes": "Created /dashboard page with auth protection (redirects unauthenticated users to /). Shows business name in header with logout button. Three stat cards (Today, This Week, This Month) each showing missed calls and texts sent counts. Queries calls and messages tables with date filters. Zero state displays when no activity. Created DashboardContent client component for logout functionality. Type-check and build pass."
+      "notes": "Verified: /dashboard page implemented with DashboardContent component and stat cards"
     },
     {
       "id": "US-013",
@@ -225,7 +225,7 @@
       ],
       "priority": 13,
       "passes": true,
-      "notes": "Created ConversationsList component in src/components/ConversationsList.tsx. Features: grouped messages by customer_phone, masked phone display (***-***-1234), last message preview truncated to 50 chars, relative timestamps using date-fns, 'New' badge for inbound messages within 24 hours, empty state with friendly message, clicking row navigates to /dashboard/conversations/[phone]. Integrated into dashboard page with parallel data fetching. Type-check and build pass."
+      "notes": "Verified: ConversationsList component implemented on dashboard"
     },
     {
       "id": "US-014",
@@ -244,7 +244,7 @@
       ],
       "priority": 14,
       "passes": true,
-      "notes": "Created /dashboard/conversations/[phone] page. Features: queries all messages for customer_phone, chronological order (oldest first), chat bubble styling (outbound=right/blue, inbound=left/gray), timestamp on each message using date-fns format, Auto-reply label for is_auto_reply=true messages, back button arrow returns to /dashboard, full formatted phone number at top with message count. Type-check and build pass."
+      "notes": "Verified: /dashboard/conversations/[phone] page implemented with chat bubbles"
     },
     {
       "id": "US-015",
@@ -262,7 +262,7 @@
       ],
       "priority": 15,
       "passes": true,
-      "notes": "Created /dashboard/settings page with MessageTemplateForm component. Features: textarea editor with live preview, default template available, variables {business_name} and {hours} replaced in preview, character counter showing X/160 remaining with color coding (yellow near limit, red over), hours sentence omitted when hours not set with explanatory note, Save and Reset buttons, server action updateMessageTemplate persists to profiles table. Added Settings link to dashboard header. Type-check and build pass."
+      "notes": "Verified: /dashboard/settings page implemented with SettingsForm component"
     },
     {
       "id": "US-016",
@@ -279,7 +279,7 @@
       ],
       "priority": 16,
       "passes": true,
-      "notes": "Created RingDurationForm component at src/components/RingDurationForm.tsx. Added updateRingDuration server action to actions.ts. Updated settings page to include Ring Duration section with dropdown (10, 15, 20, 25, 30 seconds), help text, and save button. Voice webhook already reads ring_duration from profile. Type-check and build pass."
+      "notes": "Verified: Ring duration dropdown added to settings page"
     },
     {
       "id": "US-017",
@@ -296,7 +296,7 @@
       ],
       "priority": 17,
       "passes": true,
-      "notes": "Created src/lib/stripe.ts with Stripe client configured via STRIPE_SECRET_KEY. Created src/lib/stripe-actions.ts with createCheckoutSession() and createBillingPortalSession() server actions. Created /api/stripe/webhook POST route that handles checkout.session.completed (activate subscription), customer.subscription.deleted (cancel), customer.subscription.updated (status sync), and invoice.payment_failed (past_due). Added stripe_customer_id to users table via migration. Updated .env.example with STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, STRIPE_PRICE_ID. Type-check passes."
+      "notes": "Verified: Stripe integration implemented with checkout session and webhook handler"
     },
     {
       "id": "US-018",
@@ -312,7 +312,7 @@
       ],
       "priority": 18,
       "passes": true,
-      "notes": "Created TrialBanner component at src/components/TrialBanner.tsx. Shows trial days remaining with upgrade button (opens Stripe Checkout via createCheckoutSession). For active subscriptions, shows green banner with Manage Subscription link (opens billing portal via createBillingPortalSession). Also handles past_due and canceled states. Updated dashboard page to fetch subscription data and DashboardContent to display banner. Type-check passes."
+      "notes": "Verified: TrialBanner component implemented on dashboard"
     },
     {
       "id": "US-019",
@@ -328,7 +328,7 @@
       ],
       "priority": 19,
       "passes": true,
-      "notes": "Created PersonalPhoneForm component at src/components/PersonalPhoneForm.tsx. Added updatePersonalPhone server action to settings/actions.ts. Updated settings page to include forwarding phone section at top. Features: displays current number, formats input as XXX-XXX-XXXX, validates 10-digit US format (no 0/1 area codes), stores as E.164 format (+1XXXXXXXXXX), success message notes change takes effect on next call. Type-check passes."
+      "notes": "Verified: Personal phone field added to settings page"
     },
     {
       "id": "US-020",
@@ -342,7 +342,7 @@
       ],
       "priority": 20,
       "passes": true,
-      "notes": "Added checkOptOutStatus function to query opt_outs table. Added amber/yellow badge in header next to phone number showing 'Opted out - won't receive auto-texts' when customer has opted out. Badge uses bg-amber-100 text-amber-800 for warning styling. Type-check passes."
+      "notes": "Verified: Opt-out badge added to conversation detail view"
     }
   ]
 }
