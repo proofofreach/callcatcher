@@ -311,8 +311,8 @@
         "npm run type-check passes"
       ],
       "priority": 18,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created TrialBanner component at src/components/TrialBanner.tsx. Shows trial days remaining with upgrade button (opens Stripe Checkout via createCheckoutSession). For active subscriptions, shows green banner with Manage Subscription link (opens billing portal via createBillingPortalSession). Also handles past_due and canceled states. Updated dashboard page to fetch subscription data and DashboardContent to display banner. Type-check passes."
     },
     {
       "id": "US-019",
