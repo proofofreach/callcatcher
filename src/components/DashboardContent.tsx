@@ -1,6 +1,7 @@
 'use client'
 
 import { signOut } from '@/lib/auth-client'
+import { ConversationsList, type Conversation } from './ConversationsList'
 
 interface Stats {
   missedCalls: number
@@ -17,6 +18,7 @@ interface StatsData {
 interface DashboardContentProps {
   stats: StatsData
   hasActivity: boolean
+  conversations: Conversation[]
 }
 
 function StatCard({ title, missedCalls, textsSent }: { title: string; missedCalls: number; textsSent: number }) {
@@ -49,7 +51,7 @@ function ZeroState() {
   )
 }
 
-export function DashboardContent({ stats, hasActivity }: DashboardContentProps) {
+export function DashboardContent({ stats, hasActivity, conversations }: DashboardContentProps) {
   const handleLogout = async () => {
     await signOut()
     window.location.href = '/'
@@ -86,15 +88,11 @@ export function DashboardContent({ stats, hasActivity }: DashboardContentProps) 
           <StatCard title="This Month" missedCalls={stats.thisMonth.missedCalls} textsSent={stats.thisMonth.textsSent} />
         </div>
 
-        {/* Zero State or Placeholder for Conversations */}
-        {!hasActivity && <ZeroState />}
+        {/* Zero State or Conversations List */}
+        {!hasActivity && conversations.length === 0 && <ZeroState />}
 
-        {hasActivity && (
-          <div className="bg-white rounded-lg shadow p-6">
-            <h2 className="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h2>
-            <p className="text-gray-500">Conversations will be displayed here in the next update.</p>
-          </div>
-        )}
+        {/* Conversations List */}
+        <ConversationsList conversations={conversations} />
       </div>
     </div>
   )

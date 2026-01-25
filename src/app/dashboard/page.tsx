@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { getServerUser } from '@/lib/auth-server'
 import { createClient } from '@/lib/supabase/server'
 import { DashboardContent } from '@/components/DashboardContent'
+import type { Conversation } from '@/components/ConversationsList'
 
 interface Stats {
   missedCalls: number
@@ -91,6 +92,63 @@ async function getStats(userId: string): Promise<StatsData> {
   }
 }
 
+async function getConversations(userId: string): Promise<Conversation[]> {
+  const supabase = await createClient()
+
+  // Get all messages for this user
+  const { data: messages, error } = await supabase
+    .from('messages')
+    .select('customer_phone, body, created_at, direction')
+    .eq('user_id', userId)
+    .order('created_at', { ascending: false })
+
+  if (error || !messages || messages.length === 0) {
+    return []
+  }
+
+  // Group messages by customer phone
+  const conversationMap = new Map<string, {
+    lastMessageBody: string
+    lastMessageAt: string
+    messageCount: number
+    hasUnread: boolean
+  }>()
+
+  // Track the most recent message time for "new" detection (last 24 hours)
+  const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000)
+
+  for (const message of messages) {
+    const phone = message.customer_phone
+    const existing = conversationMap.get(phone)
+
+    if (!existing) {
+      // First message for this phone (most recent due to ordering)
+      const isNew = new Date(message.created_at) > oneDayAgo && message.direction === 'inbound'
+      conversationMap.set(phone, {
+        lastMessageBody: message.body,
+        lastMessageAt: message.created_at,
+        messageCount: 1,
+        hasUnread: isNew,
+      })
+    } else {
+      // Count additional messages
+      existing.messageCount++
+    }
+  }
+
+  // Convert to array and format for component
+  const conversations: Conversation[] = Array.from(conversationMap.entries()).map(([phone, data]) => ({
+    customerPhone: phone,
+    lastMessageBody: data.lastMessageBody,
+    lastMessageAt: data.lastMessageAt,
+    isNew: data.hasUnread,
+    messageCount: data.messageCount,
+  }))
+
+  // Already sorted by most recent due to SQL ordering and how we build the map
+  return conversations
+}
+
 export default async function DashboardPage() {
   const { user, error } = await getServerUser()
 
@@ -98,8 +156,11 @@ export default async function DashboardPage() {
     redirect('/')
   }
 
-  const stats = await getStats(user.id)
+  const [stats, conversations] = await Promise.all([
+    getStats(user.id),
+    getConversations(user.id),
+  ])
   const hasActivity = stats.thisMonth.missedCalls > 0 || stats.thisMonth.textsSent > 0
 
-  return <DashboardContent stats={stats} hasActivity={hasActivity} />
+  return <DashboardContent stats={stats} hasActivity={hasActivity} conversations={conversations} />
 }

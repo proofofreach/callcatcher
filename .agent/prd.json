@@ -224,8 +224,8 @@
         "npm run type-check passes"
       ],
       "priority": 13,
-      "passes": false,
-      "notes": ""
+      "passes": true,
+      "notes": "Created ConversationsList component in src/components/ConversationsList.tsx. Features: grouped messages by customer_phone, masked phone display (***-***-1234), last message preview truncated to 50 chars, relative timestamps using date-fns, 'New' badge for inbound messages within 24 hours, empty state with friendly message, clicking row navigates to /dashboard/conversations/[phone]. Integrated into dashboard page with parallel data fetching. Type-check and build pass."
     },
     {
       "id": "US-014",
