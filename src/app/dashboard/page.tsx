@@ -3,6 +3,7 @@ import { getServerUser } from '@/lib/auth-server'
 import { createClient } from '@/lib/supabase/server'
 import { DashboardContent } from '@/components/DashboardContent'
 import type { Conversation } from '@/components/ConversationsList'
+import type { SubscriptionStatus } from '@/types/database'
 
 interface Stats {
   missedCalls: number
@@ -14,6 +15,11 @@ interface StatsData {
   thisWeek: Stats
   thisMonth: Stats
   businessName: string | null
+}
+
+interface SubscriptionData {
+  trialEndsAt: string | null
+  subscriptionStatus: SubscriptionStatus
 }
 
 async function getStats(userId: string): Promise<StatsData> {
@@ -92,6 +98,21 @@ async function getStats(userId: string): Promise<StatsData> {
   }
 }
 
+async function getSubscriptionData(userId: string): Promise<SubscriptionData> {
+  const supabase = await createClient()
+
+  const { data: user } = await supabase
+    .from('users')
+    .select('trial_ends_at, subscription_status')
+    .eq('id', userId)
+    .single()
+
+  return {
+    trialEndsAt: user?.trial_ends_at ?? null,
+    subscriptionStatus: (user?.subscription_status as SubscriptionStatus) ?? 'trial',
+  }
+}
+
 async function getConversations(userId: string): Promise<Conversation[]> {
   const supabase = await createClient()
 
@@ -156,11 +177,19 @@ export default async function DashboardPage() {
     redirect('/')
   }
 
-  const [stats, conversations] = await Promise.all([
+  const [stats, conversations, subscription] = await Promise.all([
     getStats(user.id),
     getConversations(user.id),
+    getSubscriptionData(user.id),
   ])
   const hasActivity = stats.thisMonth.missedCalls > 0 || stats.thisMonth.textsSent > 0
 
-  return <DashboardContent stats={stats} hasActivity={hasActivity} conversations={conversations} />
+  return (
+    <DashboardContent
+      stats={stats}
+      hasActivity={hasActivity}
+      conversations={conversations}
+      subscription={subscription}
+    />
+  )
 }

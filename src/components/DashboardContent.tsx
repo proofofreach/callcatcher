@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { signOut } from '@/lib/auth-client'
 import { ConversationsList, type Conversation } from './ConversationsList'
+import { TrialBanner } from './TrialBanner'
+import type { SubscriptionStatus } from '@/types/database'
 
 interface Stats {
   missedCalls: number
@@ -16,10 +18,16 @@ interface StatsData {
   businessName: string | null
 }
 
+interface SubscriptionData {
+  trialEndsAt: string | null
+  subscriptionStatus: SubscriptionStatus
+}
+
 interface DashboardContentProps {
   stats: StatsData
   hasActivity: boolean
   conversations: Conversation[]
+  subscription: SubscriptionData
 }
 
 function StatCard({ title, missedCalls, textsSent }: { title: string; missedCalls: number; textsSent: number }) {
@@ -52,7 +60,7 @@ function ZeroState() {
   )
 }
 
-export function DashboardContent({ stats, hasActivity, conversations }: DashboardContentProps) {
+export function DashboardContent({ stats, hasActivity, conversations, subscription }: DashboardContentProps) {
   const handleLogout = async () => {
     await signOut()
     window.location.href = '/'
@@ -90,6 +98,12 @@ export function DashboardContent({ stats, hasActivity, conversations }: Dashboar
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Trial/Subscription Banner */}
+        <TrialBanner
+          trialEndsAt={subscription.trialEndsAt}
+          subscriptionStatus={subscription.subscriptionStatus}
+        />
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <StatCard title="Today" missedCalls={stats.today.missedCalls} textsSent={stats.today.textsSent} />
