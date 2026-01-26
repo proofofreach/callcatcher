@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,23 +7,66 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Brand Colors - Warm & Trustworthy */
+  --primary: #0d9488;      /* Teal - trust + action */
+  --primary-dark: #0f766e;
+  --primary-light: #5eead4;
+  --accent: #f97316;       /* Orange - energy + urgency */
+  --accent-dark: #ea580c;
+  --accent-light: #fed7aa;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Phone mockup styles */
+.phone-mockup {
+  background: linear-gradient(145deg, #1f2937 0%, #111827 100%);
+  border-radius: 2.5rem;
+  padding: 0.5rem;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.phone-screen {
+  background: #f9fafb;
+  border-radius: 2rem;
+  overflow: hidden;
+}
+
+/* Message bubble animation */
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+.animate-slide-up-delay {
+  animation: slideUp 0.5s ease-out 0.3s forwards;
+  opacity: 0;
+}
+
+.animate-slide-up-delay-2 {
+  animation: slideUp 0.5s ease-out 0.6s forwards;
+  opacity: 0;
 }

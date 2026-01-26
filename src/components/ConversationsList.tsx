@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import { formatDistanceToNow } from 'date-fns'
+import { MessageCircle, ChevronRight, Inbox } from 'lucide-react'
 
 export interface Conversation {
   customerPhone: string
@@ -37,11 +38,13 @@ function truncateMessage(message: string, maxLength: number = 50): string {
 
 function EmptyState() {
   return (
-    <div className="bg-gray-50 border border-gray-200 rounded-lg p-8 text-center">
-      <div className="text-4xl mb-4">💬</div>
-      <h3 className="text-lg font-semibold text-gray-800">No conversations yet</h3>
-      <p className="text-gray-600 mt-2">
-        Conversations will appear here after your first missed call.
+    <div className="bg-white border border-gray-200 rounded-2xl p-8 text-center">
+      <div className="bg-gray-100 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <Inbox className="w-8 h-8 text-gray-400" />
+      </div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">No conversations yet</h3>
+      <p className="text-gray-500 max-w-sm mx-auto">
+        When customers respond to your auto-texts, their conversations will appear here.
       </p>
     </div>
   )
@@ -56,32 +59,43 @@ function ConversationRow({ conversation }: { conversation: Conversation }) {
   return (
     <Link
       href={`/dashboard/conversations/${phoneParam}`}
-      className={`block p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 ${
-        conversation.isNew ? 'bg-blue-50' : ''
+      className={`flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0 group cursor-pointer ${
+        conversation.isNew ? 'bg-teal-50/50' : ''
       }`}
     >
-      <div className="flex items-center justify-between">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2">
-            <span className="font-medium text-gray-900">
-              {maskPhoneNumber(conversation.customerPhone)}
+      {/* Avatar/Icon */}
+      <div className={`flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center ${
+        conversation.isNew ? 'bg-teal-100' : 'bg-gray-100'
+      }`}>
+        <MessageCircle className={`w-5 h-5 ${conversation.isNew ? 'text-teal-600' : 'text-gray-500'}`} />
+      </div>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="font-medium text-gray-900">
+            {maskPhoneNumber(conversation.customerPhone)}
+          </span>
+          {conversation.isNew && (
+            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-teal-100 text-teal-700">
+              New
             </span>
-            {conversation.isNew && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                New
-              </span>
-            )}
-          </div>
-          <p className="text-sm text-gray-500 mt-1 truncate">
-            {truncateMessage(conversation.lastMessageBody)}
-          </p>
+          )}
         </div>
-        <div className="ml-4 text-right flex-shrink-0">
+        <p className="text-sm text-gray-500 truncate">
+          {truncateMessage(conversation.lastMessageBody)}
+        </p>
+      </div>
+
+      {/* Meta */}
+      <div className="flex-shrink-0 text-right flex items-center gap-3">
+        <div>
           <p className="text-xs text-gray-400">{timeAgo}</p>
           <p className="text-xs text-gray-400 mt-1">
-            {conversation.messageCount} message{conversation.messageCount !== 1 ? 's' : ''}
+            {conversation.messageCount} msg{conversation.messageCount !== 1 ? 's' : ''}
           </p>
         </div>
+        <ChevronRight className="w-5 h-5 text-gray-300 group-hover:text-gray-500 transition-colors" />
       </div>
     </Link>
   )
@@ -93,11 +107,12 @@ export function ConversationsList({ conversations }: ConversationsListProps) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow overflow-hidden">
-      <div className="px-4 py-3 border-b border-gray-200">
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
         <h2 className="text-lg font-semibold text-gray-900">Conversations</h2>
+        <span className="text-sm text-gray-500">{conversations.length} total</span>
       </div>
-      <div className="divide-y divide-gray-100">
+      <div>
         {conversations.map((conversation) => (
           <ConversationRow key={conversation.customerPhone} conversation={conversation} />
         ))}

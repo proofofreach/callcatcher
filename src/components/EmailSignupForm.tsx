@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { signInWithEmail } from '@/lib/auth-client'
+import { ArrowRight, Loader2 } from 'lucide-react'
 
 export function EmailSignupForm() {
   const [email, setEmail] = useState('')
@@ -28,27 +29,41 @@ export function EmailSignupForm() {
   return (
     <form onSubmit={handleSubmit} className="w-full max-w-md">
       <div className="flex flex-col sm:flex-row gap-3">
+        <label htmlFor="email-signup" className="sr-only">Email address</label>
         <input
+          id="email-signup"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
           required
-          className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500"
+          className="flex-1 px-4 py-3.5 rounded-xl border border-gray-200 bg-white focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-gray-900 placeholder-gray-400 shadow-sm"
           disabled={isLoading}
         />
         <button
           type="submit"
           disabled={isLoading}
-          className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap"
+          className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap shadow-lg shadow-orange-500/25 cursor-pointer"
         >
-          {isLoading ? 'Sending...' : 'Get Started'}
+          {isLoading ? (
+            <>
+              <Loader2 className="w-5 h-5 animate-spin" />
+              Sending...
+            </>
+          ) : (
+            <>
+              Start Catching Leads
+              <ArrowRight className="w-5 h-5" />
+            </>
+          )}
         </button>
       </div>
       {message && (
         <p
-          className={`mt-3 text-sm ${
-            message.type === 'success' ? 'text-green-600' : 'text-red-600'
+          className={`mt-3 text-sm font-medium ${
+            message.type === 'success'
+              ? 'text-teal-600'
+              : 'text-red-600'
           }`}
         >
           {message.text}
