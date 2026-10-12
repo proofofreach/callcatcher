@@ -15,11 +15,19 @@
 
 **Auto-text customers when you miss their call. Stop losing $500+ leads to voicemail.**
 
+<p align="center">
+  <img src="docs/screenshots/landing.png" alt="CallCatcher landing page with a missed-call auto-text on a phone" width="100%">
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/dashboard.png" alt="CallCatcher dashboard showing missed calls, auto-texts sent, and trial status (sample data)" width="100%">
+</p>
+
 ---
 
 ## TL;DR
 
-**The Problem**: Small businesses miss 62% of incoming calls. Each missed call is a potential $500+ customer walking away to a competitor who answered.
+**The Problem**: Small businesses miss calls while they work. Each missed call can be a $500 job walking away to a competitor who answered.
 
 **The Solution**: CallCatcher gives you a dedicated business phone number. When you miss a call, we instantly text the customer: *"Sorry we missed you! How can we help?"* — keeping the lead warm until you can call back.
 
@@ -86,14 +94,14 @@
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/callcatcher.git
+git clone https://github.com/ProofOfReach/callcatcher.git
 cd callcatcher
 npm install
 ```
 
 ### 2. Environment Variables
 
-Create `.env.local`:
+Copy `.env.example` to `.env.local` and fill in your keys:
 
 ```bash
 # Supabase
@@ -108,14 +116,11 @@ TWILIO_AUTH_TOKEN=your-auth-token
 # Stripe
 STRIPE_SECRET_KEY=sk_test_xxxxxxxxxx
 STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxx
-STRIPE_PRICE_10_CREDITS=price_xxxxxxxxxx
+STRIPE_PRICE_ID=price_xxxxxxxxxx
 
 # Base URL (use ngrok for local dev)
 NEXT_PUBLIC_BASE_URL=https://your-ngrok-url.ngrok-free.dev
 
-# Email (optional)
-RESEND_API_KEY=re_xxxxxxxxxx
-EMAIL_FROM=noreply@yourdomain.com
 ```
 
 ### 3. Database Setup
@@ -127,12 +132,7 @@ Run migrations in your Supabase SQL Editor:
 -- Key tables: users, profiles, messages, calls, opt_outs
 ```
 
-Or use the Supabase MCP if you have it configured:
-
-```bash
-# Migrations are in supabase/migrations/
-# Run them in order: initial_schema, add_stripe_customer_id, sync_auth_users
-```
+Run the files in `supabase/migrations/` in order: `initial_schema`, `add_stripe_customer_id`, `sync_auth_users`.
 
 ### 4. Start ngrok (for Twilio webhooks)
 
@@ -206,7 +206,7 @@ Configure these in Twilio Console or they're auto-set when provisioning:
 Create these in Stripe Dashboard:
 
 1. **Monthly Subscription** - $29/month
-2. Set `STRIPE_PRICE_10_CREDITS` to the price ID
+2. Set `STRIPE_PRICE_ID` to the price ID
 
 The webhook handles:
 - `checkout.session.completed` - Activate subscription
@@ -296,7 +296,7 @@ Yes. All data is stored in Supabase with Row Level Security. Each user can only 
 
 ## License
 
-MIT
+[MIT](LICENSE)
 
 ---
 

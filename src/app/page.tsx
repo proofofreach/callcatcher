@@ -8,10 +8,8 @@ import {
   Shield,
   Zap,
   Check,
-  Star,
   ArrowRight,
   PhoneMissed,
-  Users,
   TrendingUp
 } from 'lucide-react'
 
@@ -50,12 +48,6 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
             {/* Left: Copy */}
             <div className="text-center lg:text-left">
-              {/* Social proof badge */}
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-teal-50 border border-teal-200 rounded-full text-sm text-teal-700 mb-6">
-                <Users className="w-4 h-4" />
-                <span>Trusted by 500+ service businesses</span>
-              </div>
-
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight leading-[1.1] mb-6">
                 That Missed Call Just Cost You{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-orange-600">
@@ -115,9 +107,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center mb-4">
                 <PhoneMissed className="w-6 h-6 text-red-400" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">62% of calls go unanswered</h3>
+              <h3 className="text-xl font-semibold mb-2">Calls come in while you work</h3>
               <p className="text-gray-400">
-                Service businesses miss most calls during working hours—because they&apos;re actually working.
+                Service businesses miss calls during working hours—because they&apos;re actually working.
               </p>
             </div>
 
@@ -126,7 +118,7 @@ export default function Home() {
               <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center mb-4">
                 <Clock className="w-6 h-6 text-orange-400" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">85% won&apos;t call back</h3>
+              <h3 className="text-xl font-semibold mb-2">Most callers won&apos;t wait</h3>
               <p className="text-gray-400">
                 Customers don&apos;t leave voicemails anymore. If you don&apos;t answer, they move on to the next contractor.
               </p>
@@ -137,9 +129,9 @@ export default function Home() {
               <div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center mb-4">
                 <DollarSign className="w-6 h-6 text-yellow-400" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">$15,000/year lost</h3>
+              <h3 className="text-xl font-semibold mb-2">Missed calls become their jobs</h3>
               <p className="text-gray-400">
-                The average contractor loses this much annually to missed calls that become competitor jobs.
+                Every unanswered call is a lead your competitor can book first.
               </p>
             </div>
           </div>
@@ -210,105 +202,6 @@ export default function Home() {
                   They reply. You text back when you&apos;re free. Lead captured, job booked, money in your pocket.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Social Proof / Testimonials */}
-      <section className="py-16 sm:py-24 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Contractors Love CallCatcher
-            </h2>
-            <p className="text-lg text-gray-600">
-              Join hundreds of service businesses capturing more leads.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {/* Testimonial 1 */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6">
-                &quot;I was losing 3-4 jobs a week to missed calls. Now? I haven&apos;t lost a lead in months. Best $29 I spend every month.&quot;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold">
-                  MR
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Mike Rodriguez</p>
-                  <p className="text-sm text-gray-500">Rodriguez Plumbing, Phoenix AZ</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 2 */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6">
-                &quot;My customers think I have a receptionist now. They have no idea it&apos;s automated. Setup took 5 minutes.&quot;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-orange-700 font-semibold">
-                  SJ
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Sarah Johnson</p>
-                  <p className="text-sm text-gray-500">Johnson Electric, Austin TX</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Testimonial 3 */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
-              <div className="flex gap-1 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <p className="text-gray-700 mb-6">
-                &quot;ROI is insane. One HVAC job is $800+. If I save just one lead a month, CallCatcher pays for itself 25x over.&quot;
-              </p>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-teal-100 flex items-center justify-center text-teal-700 font-semibold">
-                  TC
-                </div>
-                <div>
-                  <p className="font-semibold text-gray-900">Tom Chen</p>
-                  <p className="text-sm text-gray-500">Chen HVAC Services, Denver CO</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Stats bar */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8">
-            <div className="text-center">
-              <p className="text-4xl font-bold text-teal-600">500+</p>
-              <p className="text-gray-600 mt-1">Active businesses</p>
-            </div>
-            <div className="text-center">
-              <p className="text-4xl font-bold text-teal-600">50K+</p>
-              <p className="text-gray-600 mt-1">Leads captured</p>
-            </div>
-            <div className="text-center">
-              <p className="text-4xl font-bold text-teal-600">4.9</p>
-              <p className="text-gray-600 mt-1">Average rating</p>
-            </div>
-            <div className="text-center">
-              <p className="text-4xl font-bold text-teal-600">$2M+</p>
-              <p className="text-gray-600 mt-1">Revenue saved</p>
             </div>
           </div>
         </div>
@@ -438,7 +331,7 @@ export default function Home() {
                   <p className="text-center">
                     <span className="font-semibold text-orange-800">$29 pays for itself with ONE saved lead.</span>
                     <br />
-                    <span className="text-sm text-orange-700">Average contractor job: $500+. That&apos;s 17x ROI.</span>
+                    <span className="text-sm text-orange-700">If one saved lead is a $500 job, that&apos;s 17x the monthly price.</span>
                   </p>
                 </div>
 
